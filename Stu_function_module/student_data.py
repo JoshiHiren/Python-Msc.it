@@ -28,6 +28,8 @@ def get_student_data():
             grade = "C"
         elif percentage >= 50:
             grade = "D"
+        elif percentage >= 40:
+            grade = "E"
         else:
             grade = "F"
 
