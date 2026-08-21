@@ -16,7 +16,7 @@ def get_student_data():
             marks.append(mark)
 
         total = sum(marks)
-        percentage = total / 5
+        percentage = total / 4
 
         if percentage >= 90:
             grade = "A+"
