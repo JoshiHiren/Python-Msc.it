@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+    <title>Todo App</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+        body {
+            background: #f3f4f6;
+            padding: 40px;
+        }
+        .container {
+            max-width: 1000px;
+            margin: auto;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+        }
+        /* Add Task Box */
+        .form-box {
+            background: rgb(222, 208, 53);
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+        .form-box h2 {
+            margin-bottom: 20px;
+            color: #171616;
+        }
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: bold;
+        }
+        input,
+        select {
+            width: 100%;
+            padding: 11px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .add-btn {
+            margin-top: 20px;
+            padding: 11px 25px;
+            background: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .add-btn:hover {
+            background: #226130;
+        }
+        /* Table */
+        .table-box {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        }
+        .table-box h2 {
+            margin-bottom: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th {
+            background: #343a40;
+            color: white;
+            padding: 12px;
+            text-align: left;
+        }
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #ddd;
+        }
+        tr:hover {
+            background: #f8f9fa;
+        }
+        /* Status */
+        .status {
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 13px;
+        }
+        .pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+        .progress {
+            background: #cce5ff;
+            color: #004085;
+        }
+        .completed {
+            background: #d4edda;
+            color: #155724;
+        }
+        /* Buttons */
+        .edit-btn {
+            background: #007bff;
+            color: white;
+            padding: 6px 12px;
+            text-decoration: none;
+            border-radius: 4px;
+        }
+        .delete-btn {
+            background: #dc3545;
+            color: white;
+            padding: 6px 12px;
+            text-decoration: none;
+            border-radius: 4px;
+        }
+        .edit-btn:hover {
+            background: #0069d9;
+        }
+        .delete-btn:hover {
+            background: #c82333;
+        }
+        @media (max-width: 700px) {
+            body {
+                padding: 15px;
+            }
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            table {
+                font-size: 13px;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>📝 Todo App</h1>
+    <!-- Add Task -->
+    <div class="form-box">
+        <h2>Add New Task</h2>
+        <form action="/add" method="POST">
+            <div class="form-row">
+                <div>
+                    <label>Task Name</label>
+                    <input
+                        type="text"
+                        name="task_name"
+                        placeholder="Enter task name"
+                        required>
+                </div>
+                <div>
+                    <label>Task Date</label>
+                    <input
+                        type="date"
+                        name="task_date"
+                        required>
+                </div>
+                <div>
+                    <label>Task Status</label>
+                    <select
+                        name="task_status"
+                        required>
+                        <option value="">
+                            Select Status
+                        </option>
+                        <option value="Pending">
+                            Pending
+                        </option>
+                        <option value="In Progress">
+                            In Progress
+                        </option>
+                        <option value="Completed">
+                            Completed
+                        </option>
+                    </select>
+                </div>
+            </div>
+            <button
+                type="submit"
+                class="add-btn">
+                + Add Task
+            </button>
+        </form>
+    </div>
+    <!-- Task List -->
+    <div class="table-box">
+        <h2>All Tasks</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Task Name</th>
+                    <th>Date</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for todo in todos %}
+                <tr>
+                    <td>
+                        {{ todo.id }}
+                    </td>
+                    <td>
+                        {{ todo.name }}
+                    </td>
+                    <td>
+                        {{ todo.due_date }}
+                    </td>
+                    <td>
+                        {% if todo.status == "Pending" %}
+                            <span class="status pending">
+                                Pending
+                            </span>
+                        {% elif todo.status == "In Progress" %}
+                            <span class="status progress">
+                                In Progress
+                            </span>
+                        {% else %}
+                            <span class="status completed">
+                                Completed
+                            </span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <a
+                            href="/edit/{{ todo.id }}"
+                            class="edit-btn">
+                            Edit
+                        </a>
+                        <a
+                            href="/delete/{{ todo.id }}"
+                            class="delete-btn"
+                            onclick="return confirm('Delete this task?')">
+                            Delete
+                        </a>
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td
+                        colspan="5"
+                        style="text-align:center;">
+                        No tasks found
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+</body>
+</html>

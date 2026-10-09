@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Todo App</title>
+    <style>
+        body {
+            font-family: Arial;
+            background: #f2f2f2;
+        }
+        .container {
+            width: 450px;
+            margin: 50px auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px #ccc;
+        }
+        h1 {
+            text-align: center;
+        }
+        label {
+            display: block;
+            margin-top: 15px;
+            margin-bottom: 5px;
+        }
+        input, select {
+            width: 100%;
+            padding: 10px;
+            box-sizing: border-box;
+        }
+        button {
+            width: 100%;
+            padding: 12px;
+            margin-top: 20px;
+            background: green;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        .task {
+            margin-top: 20px;
+            padding: 15px;
+            background: #eee;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>Todo App</h1>
+    <form action="/add" method="POST">
+        <label>Task Name</label>
+        <input
+            type="text"
+            name="task_name"
+            placeholder="Enter task name"
+            required>
+        <label>Task Date</label>
+        <input
+            type="date"
+            name="task_date"
+            required>
+        <label>Task Status</label>
+        <select name="task_status" required>
+            <option value="">Select Status</option>
+            <option value="Pending">Pending</option>
+            <option value="In Progress">In Progress</option>
+            <option value="Completed">Completed</option>
+        </select>
+        <button type="submit">
+            Add Task
+        </button>
+    </form>
+    <h2>Tasks</h2>
+    {% for todo in todos %}
+    <div class="task">
+        <strong>{{ todo.name }}</strong>
+        <p>Date: {{ todo.due_date }}</p>
+        <p>Status: {{ todo.status }}</p>
+    </div>
+    {% endfor %}
+</div>
+</body>
+</html>
