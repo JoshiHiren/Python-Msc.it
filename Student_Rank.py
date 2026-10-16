@@ -24,7 +24,6 @@ for i in range(n):
 
     students.append([roll, name, total, percentage, grade])
 
-# Rank
 students.sort(key=lambda x: x[3], reverse=True)
 
 print("\nRoll\tName\tTotal\tPercentage\tGrade\tRank")
@@ -32,7 +31,6 @@ print("\nRoll\tName\tTotal\tPercentage\tGrade\tRank")
 for i in range(n):
     rank = i + 1
 
-    # Same percentage = same rank
     if i > 0 and students[i][3] == students[i-1][3]:
         rank = students[i-1][5]
 
