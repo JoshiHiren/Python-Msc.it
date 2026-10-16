@@ -1,7 +1,4 @@
-
 from datetime import datetime
-
-
 class Course:
     def __init__(self, course_code, day, start_time, end_time):
         self.course_code = course_code
@@ -9,7 +6,6 @@ class Course:
         self.start_time = start_time
         self.end_time = end_time
 
-        # Validate time format
         start = datetime.strptime(start_time, "%H:%M")
         end = datetime.strptime(end_time, "%H:%M")
 
@@ -40,7 +36,7 @@ class Student:
                 c2 = courses[j]
 
                 if c1.day == c2.day:
-                    # Courses overlap if each starts before the other ends
+                    
                     if (c1.start_time < c2.end_time and
                             c2.start_time < c1.end_time):
                         conflicts.append((c1, c2))
@@ -126,7 +122,6 @@ def main():
 
             students.append(student)
 
-        # Display student details and detect conflicts
         print("\n========== REGISTRATION REPORT ==========")
 
         for student in students:
