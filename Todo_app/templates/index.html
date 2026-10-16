@@ -1,0 +1,137 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My To-Do List</title>
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>My To-Do List</h1>
+            <p>Organize your tasks and get things done.</p>
+        </header>
+
+        <section class="panel">
+            <h2>Add a New Task</h2>
+
+            <form action="{{ url_for('add') }}" method="POST">
+                <label for="title">Task Title</label>
+                <input type="text" id="title" name="title"
+                       maxlength="150" required
+                       placeholder="Enter task title">
+
+                <label for="description">Description</label>
+                <textarea id="description" name="description"
+                          maxlength="300"
+                          placeholder="Enter task details"></textarea>
+
+                <label for="priority">Priority</label>
+                <select id="priority" name="priority" required>
+                    <option value="High">High</option>
+                    <option value="Medium" selected>Medium</option>
+                    <option value="Low">Low</option>
+                </select>
+
+                <label for="due_date">Due Date</label>
+                <input type="date" id="due_date" name="due_date">
+
+                <button type="submit">Add Task</button>
+            </form>
+        </section>
+
+        <section class="task-section">
+            <h2>Pending Tasks ({{ pending_tasks|length }})</h2>
+
+            {% for task in pending_tasks %}
+                <article class="task-card">
+                    <div class="task-info">
+                        <h3>{{ task.title }}</h3>
+                        <p>{{ task.description or "No description" }}</p>
+
+                        <span class="priority {{ task.priority|lower }}">
+                            {{ task.priority }} Priority
+                        </span>
+
+                        <p>
+                            Due Date:
+                            {{ task.due_date.strftime('%d-%m-%Y')
+                               if task.due_date else "Not set" }}
+                        </p>
+                    </div>
+
+                    <div class="actions">
+                        <a class="button complete"
+                           href="{{ url_for('toggle', id=task.id) }}">
+                            Mark Completed
+                        </a>
+
+                        <a class="button edit"
+                           href="{{ url_for('edit', id=task.id) }}">
+                            Edit
+                        </a>
+
+                        <form action="{{ url_for('delete', id=task.id) }}"
+                              method="POST"
+                              onsubmit="return confirm('Delete this task?');">
+                            <button class="delete" type="submit">
+                                Delete
+                            </button>
+                        </form>
+                    </div>
+                </article>
+            {% else %}
+                <p class="empty">No pending tasks. You're all caught up!</p>
+            {% endfor %}
+        </section>
+
+        <section class="task-section">
+            <h2>Completed Tasks ({{ completed_tasks|length }})</h2>
+
+            {% for task in completed_tasks %}
+                <article class="task-card completed-card">
+                    <div class="task-info">
+                        <h3>{{ task.title }}</h3>
+                        <p>{{ task.description or "No description" }}</p>
+
+                        <span class="priority {{ task.priority|lower }}">
+                            {{ task.priority }} Priority
+                        </span>
+
+                        <p>
+                            Due Date:
+                            {{ task.due_date.strftime('%d-%m-%Y')
+                               if task.due_date else "Not set" }}
+                        </p>
+                    </div>
+
+                    <div class="actions">
+                        <a class="button pending"
+                           href="{{ url_for('toggle', id=task.id) }}">
+                            Mark Pending
+                        </a>
+
+                        <a class="button edit"
+                           href="{{ url_for('edit', id=task.id) }}">
+                            Edit
+                        </a>
+
+                        <form action="{{ url_for('delete', id=task.id) }}"
+                              method="POST"
+                              onsubmit="return confirm('Delete this task?');">
+                            <button class="delete" type="submit">
+                                Delete
+                            </button>
+                        </form>
+                    </div>
+                </article>
+            {% else %}
+                <p class="empty">No completed tasks yet.</p>
+            {% endfor %}
+        </section>
+    </div>
+</body>
+</html>
