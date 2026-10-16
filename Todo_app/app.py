@@ -1,18 +1,14 @@
-
 from flask import Flask, render_template, request, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 
 app = Flask(__name__)
 
-# Database configuration
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///todo.db"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 db = SQLAlchemy(app)
 
-
-# Task database model
 class Task(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(150), nullable=False)
@@ -21,8 +17,6 @@ class Task(db.Model):
     is_completed = db.Column(db.Boolean, default=False, nullable=False)
     due_date = db.Column(db.Date, nullable=True)
 
-
-# Home page: show pending and completed tasks
 @app.route("/")
 def index():
     pending_tasks = Task.query.filter_by(
@@ -39,8 +33,6 @@ def index():
         completed_tasks=completed_tasks
     )
 
-
-# Add a new task
 @app.route("/add", methods=["POST"])
 def add():
     title = request.form.get("title", "").strip()
@@ -77,8 +69,6 @@ def add():
 
     return redirect(url_for("index"))
 
-
-# Toggle pending/completed status
 @app.route("/toggle/<int:id>")
 def toggle(id):
     task = db.get_or_404(Task, id)
@@ -87,15 +77,11 @@ def toggle(id):
     db.session.commit()
     return redirect(url_for("index"))
 
-
-# Display the edit form
 @app.route("/edit/<int:id>")
 def edit(id):
     task = db.get_or_404(Task, id)
     return render_template("edit.html", task=task)
 
-
-# Update an existing task
 @app.route("/update/<int:id>", methods=["POST"])
 def update(id):
     task = db.get_or_404(Task, id)
@@ -130,8 +116,6 @@ def update(id):
     db.session.commit()
     return redirect(url_for("index"))
 
-
-# Delete a task
 @app.route("/delete/<int:id>", methods=["POST"])
 def delete(id):
     task = db.get_or_404(Task, id)
@@ -141,8 +125,6 @@ def delete(id):
 
     return redirect(url_for("index"))
 
-
-# Create the database and start the application
 if __name__ == "__main__":
     with app.app_context():
         db.create_all()
