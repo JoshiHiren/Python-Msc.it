@@ -13,7 +13,6 @@ from sqlalchemy import (
 )
 from sqlalchemy.orm import declarative_base, sessionmaker
 
-# Application configuration
 BASE_DIR = Path(__file__).resolve().parent
 DATABASE_URL = f"sqlite:///{BASE_DIR / 'tasks.db'}"
 
@@ -39,8 +38,6 @@ app.add_middleware(
 
 templates = Jinja2Templates(directory=str(BASE_DIR / "templates"))
 
-
-# Database model
 class Task(Base):
     __tablename__ = "tasks"
 
@@ -52,12 +49,8 @@ class Task(Base):
     created_by = Column(String(100), nullable=False, index=True)
     created_at = Column(DateTime, default=datetime.now, nullable=False)
 
-
-# Create the tasks table when the application starts
 Base.metadata.create_all(bind=engine)
 
-
-# Authentication helper
 def get_current_user(request: Request):
     username = request.session.get("username")
     if not username:
@@ -82,8 +75,6 @@ def get_owned_task(db, task_id: int, username: str):
         raise HTTPException(status_code=404, detail="Task not found")
     return task
 
-
-# Home page
 @app.get("/")
 def home(request: Request):
     username = login_required(request)
@@ -129,8 +120,6 @@ def home(request: Request):
     finally:
         db.close()
 
-
-# Login form
 @app.get("/login")
 def login_page(request: Request):
     if get_current_user(request):
@@ -142,8 +131,6 @@ def login_page(request: Request):
         context={"theme": request.cookies.get("theme", "light")},
     )
 
-
-# Store the user's name in the session
 @app.post("/login")
 def login(request: Request, username: str = Form(...)):
     username = username.strip()
@@ -158,9 +145,7 @@ def login(request: Request, username: str = Form(...)):
     request.session["username"] = username
 
     return RedirectResponse("/", status_code=303)
-
-
-# Add a task
+    
 @app.post("/add")
 def add_task(
     request: Request,
@@ -206,8 +191,6 @@ def add_task(
     finally:
         db.close()
 
-
-# Toggle pending/completed status
 @app.get("/toggle/{id}")
 def toggle_task(request: Request, id: int):
     username = login_required(request)
@@ -223,8 +206,6 @@ def toggle_task(request: Request, id: int):
     finally:
         db.close()
 
-
-# Display the edit form
 @app.get("/edit/{id}")
 def edit_task_page(request: Request, id: int):
     username = login_required(request)
@@ -242,8 +223,6 @@ def edit_task_page(request: Request, id: int):
     finally:
         db.close()
 
-
-# Save edited task details
 @app.post("/update/{id}")
 def update_task(
     request: Request,
@@ -277,8 +256,6 @@ def update_task(
     finally:
         db.close()
 
-
-# Delete a task
 @app.post("/delete/{id}")
 def delete_task(request: Request, id: int):
     username = login_required(request)
@@ -294,8 +271,6 @@ def delete_task(request: Request, id: int):
     finally:
         db.close()
 
-
-# Save the selected theme in a browser cookie
 @app.get("/set-theme/{theme}")
 def set_theme(request: Request, theme: str):
     username = login_required(request)
@@ -316,8 +291,6 @@ def set_theme(request: Request, theme: str):
     )
     return response
 
-
-# Log out
 @app.get("/logout")
 def logout(request: Request):
     request.session.clear()
