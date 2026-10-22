@@ -1,0 +1,18 @@
+
+{% extends "base.html" %}
+{% block title %}Login | Task Tracker{% endblock %}
+
+{% block content %}
+<div class="panel" style="max-width:450px;margin:60px auto;">
+    <h1>Welcome back!</h1>
+    <p class="muted">Enter your name to manage your personal tasks.</p>
+
+    <form action="/login" method="post">
+        <label for="username">Your name</label>
+        <input id="username" type="text" name="username"
+               maxlength="100" required autofocus
+               placeholder="Enter your name">
+        <button type="submit">Login</button>
+    </form>
+</div>
+{% endblock %}

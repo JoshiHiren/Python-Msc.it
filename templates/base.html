@@ -1,0 +1,107 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Personal Task Tracker{% endblock %}</title>
+    <style>
+        * { box-sizing: border-box; }
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            transition: background .2s, color .2s;
+        }
+        body.light {
+            --bg: #f3f6fb;
+            --panel: #ffffff;
+            --text: #202b3c;
+            --muted: #65748b;
+            --border: #dce3ed;
+            --accent: #4f46e5;
+        }
+        body.dark {
+            --bg: #111827;
+            --panel: #1f2937;
+            --text: #f3f4f6;
+            --muted: #aab6c8;
+            --border: #374151;
+            --accent: #818cf8;
+        }
+        header {
+            background: var(--panel);
+            border-bottom: 1px solid var(--border);
+            padding: 16px 5%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        header a { margin-left: 12px; }
+        a { color: var(--accent); text-decoration: none; }
+        a:hover { text-decoration: underline; }
+        main { max-width: 1000px; margin: 30px auto; padding: 0 18px; }
+        .panel, .task {
+            background: var(--panel);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 18px;
+        }
+        .task { display: flex; justify-content: space-between; gap: 14px; }
+        .task-info { min-width: 0; overflow-wrap: anywhere; }
+        .actions { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+        input, textarea, select, button {
+            font: inherit;
+            padding: 11px;
+            border-radius: 7px;
+            border: 1px solid var(--border);
+        }
+        input, textarea, select {
+            width: 100%;
+            margin: 7px 0 14px;
+            background: var(--bg);
+            color: var(--text);
+        }
+        button, .btn {
+            display: inline-block;
+            cursor: pointer;
+            background: var(--accent);
+            color: white;
+            border: 0;
+            border-radius: 7px;
+            padding: 10px 14px;
+        }
+        .danger { background: #dc2626; }
+        .muted { color: var(--muted); }
+        .priority { font-size: .85rem; font-weight: bold; }
+        .completed { opacity: .75; }
+        .completed h3 { text-decoration: line-through; }
+        form.inline { display: inline; }
+        form.inline button { padding: 8px 10px; }
+        @media (max-width: 600px) {
+            .task { flex-direction: column; }
+            header { align-items: flex-start; }
+        }
+    </style>
+</head>
+<body class="{{ theme|default('light') }}">
+<header>
+    <strong>✓ Personal Task Tracker</strong>
+    <nav>
+        {% if request.session.get("username") %}
+            <span class="muted">Hi, {{ request.session.get("username") }}</span>
+            <a href="/set-theme/light">☀ Light</a>
+            <a href="/set-theme/dark">☾ Dark</a>
+            <a href="/logout">Logout</a>
+        {% endif %}
+    </nav>
+</header>
+<main>
+    {% block content %}{% endblock %}
+</main>
+</body>
+</html>
